@@ -14,9 +14,9 @@ RESPONSIBILITY FOR ANY BEHAVIOR ONCE INSTALLED.
 
     'depends':['base','purchase','stock','sale','mrp'],
     'data':[
+            'views/mrp_entry_wizard_views.xml',
             'views/sale_order_views.xml',
             'views/mrp_views.xml',
-            'views/mrp_entry_wizard_views.xml',
             ],
     'installable': True,
 }

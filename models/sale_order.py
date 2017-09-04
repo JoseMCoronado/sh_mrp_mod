@@ -47,5 +47,7 @@ class SaleOrderLine(models.Model):
     def _get_dates(self):
         for line in self:
             #special for client because of former custom date
-            line.requested_date = line.order_id.x_requested_date
-            line.commitment_date = line.order_id.x_commitment_date
+            if line.requested_date == False:
+                line.requested_date = line.order_id.x_requested_date
+            if line.commitment_date == False:
+                line.commitment_date = line.order_id.x_commitment_date

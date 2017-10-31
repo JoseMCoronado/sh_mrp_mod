@@ -8,8 +8,11 @@
       <field name="priority">99</field>
       <field name="arch" type="xml">
         <xpath expr="//div[@name='button_box']" position="inside">
-            <button name="action_view_mfg_orders" type="object" class="oe_stat_button" icon="fa-cogs" attrs="{'invisible': [('mfg_count', '=', 0)]}">
+            <!--<button name="action_view_mfg_orders" type="object" class="oe_stat_button" icon="fa-cogs" attrs="{'invisible': [('mfg_count', '=', 0)]}">
                 <field name="mfg_count" widget="statinfo" string="Mfg Orders"/>
+            </button>-->
+            <button name="action_view_work_orders" type="object" class="oe_stat_button" icon="fa-cogs" attrs="{'invisible': [('workorder_count', '=', 0)]}">
+                <field name="workorder_count" widget="statinfo" string="Work Orders"/>
             </button>
         </xpath>
       </field>

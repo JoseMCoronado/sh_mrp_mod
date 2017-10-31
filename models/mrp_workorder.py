@@ -5,28 +5,36 @@ from odoo import api, fields, models
 class MrpWorkorder(models.Model):
     _inherit = 'mrp.workorder'
 
-    requested_date = fields.Datetime(string='Requested Date',
-    readonly=True, store=False, index=True, copy=False, compute='_get_dates',)
-    commitment_date = fields.Datetime(string='Commitment Date',
-    readonly=True, store=False, index=True, copy=False, compute='_get_dates',)
+    #requested_date = fields.Datetime(string='Requested Date',
+    #readonly=True, store=False, index=True, copy=False, compute='_get_dates',)
+    #commitment_date = fields.Datetime(string='Commitment Date',
+    #readonly=True, store=False, index=True, copy=False, compute='_get_dates',)
     product_image = fields.Binary(string='Product Image',
     readonly=True, related='product_id.product_tmpl_id.image', store=False)
     line_desc = fields.Char(string='Line Description',
     compute='_get_line_info', readonly=True,store=False)
     line_qty = fields.Char(string='Line Qty',
     compute='_get_line_info', readonly=True,store=False)
+    sale_workorder_id = fields.Many2one('sale.workorder', string='Sale Workorder')
 
-    @api.multi
-    def _get_dates(self):
-        for work in self:
-            work.requested_date = work.production_id.requested_date
-            work.commitment_date = work.production_id.requested_date
+
+    #@api.multi
+    #def _get_dates(self):
+    #    for work in self:
+    #        work.requested_date = work.production_id.requested_date
+    #        work.commitment_date = work.production_id.requested_date
 
     @api.multi
     def button_finish(self):
         super(MrpWorkorder, self).button_finish()
         if all(wo.state == 'done' for wo in self.production_id.workorder_ids):
             self.production_id.button_mark_done()
+
+    @api.multi
+    def action_update_mo_qty(self):
+        action_data = self.env.ref('mrp.action_change_production_qty').read()[0]
+        action_data['context'] = {'default_mo_id': self.production_id.id}
+        return action_data
 
     @api.multi
     def _get_line_info(self):

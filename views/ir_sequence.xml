@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.sequence" id="sequence_sale_workorder">
+      <field name="name">Sale Workorder Sequence</field>
+      <field name="implementation">standard</field>
+      <field name="code">sale.workorder.sequence</field>
+      <field name="prefix">WO/</field>
+      <field name="padding" eval="4"/>
+      <field name="number_increment" eval="1"/>
+    </record>
+</odoo>

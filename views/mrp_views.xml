@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <data>
-    <record model="ir.ui.view" id="mrp_production_tree_view_mod">
+    <!--<record model="ir.ui.view" id="mrp_production_tree_view_mod">
       <field name="name">x_gfp.mrp.production.tree.mod</field>
       <field name="model">mrp.production</field>
       <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
@@ -12,7 +12,7 @@
           <field name="commitment_date"/>
         </xpath>
       </field>
-    </record>
+    </record>-->
     <record model="ir.ui.view" id="mrp_production_tree_form_mod">
       <field name="name">x_gfp.mrp.production.form.mod</field>
       <field name="model">mrp.production</field>
@@ -24,10 +24,10 @@
                 <field name="sale_count" widget="statinfo" string="Sale Order"/>
             </button>
         </xpath>
-        <xpath expr="//field[@name='date_planned_start']" position="before">
+        <!--<xpath expr="//field[@name='date_planned_start']" position="before">
           <field name="requested_date"/>
           <field name="commitment_date"/>
-        </xpath>
+        </xpath>-->
         <xpath expr="//field[@name='move_raw_ids']/.." position="replace"/>
         <xpath expr="//field[@name='move_finished_ids']/.." position="after">
           <page string="Consumed Materials">
@@ -51,7 +51,7 @@
         </xpath>
       </field>
     </record>
-    <record model="ir.ui.view" id="mrp_workorder_tree_view_mod">
+    <!--<record model="ir.ui.view" id="mrp_workorder_tree_view_mod">
       <field name="name">x_gfp.mrp.production.work.order.tree.mod</field>
       <field name="model">mrp.workorder</field>
       <field name="inherit_id" ref="mrp.mrp_production_workcenter_tree_view_inherit"/>
@@ -62,7 +62,7 @@
           <field name="commitment_date"/>
         </xpath>
       </field>
-    </record>
+    </record>-->
     <record model="ir.ui.view" id="mrp_workorder_form_view_mod">
       <field name="name">x_gfp.mrp.production.work.order.form.mod</field>
       <field name="model">mrp.workorder</field>

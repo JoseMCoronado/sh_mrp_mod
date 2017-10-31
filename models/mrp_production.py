@@ -5,10 +5,10 @@ from odoo import api, fields, models
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    requested_date = fields.Datetime(string='Requested Date',
-    readonly=True, store=False, index=True, copy=False, compute='_get_dates',)
-    commitment_date = fields.Datetime(string='Commitment Date',
-    readonly=True, store=False, index=True, copy=False, compute='_get_dates',)
+    #requested_date = fields.Datetime(string='Requested Date',
+    #readonly=True, store=False, index=True, copy=False, compute='_get_dates',)
+    #commitment_date = fields.Datetime(string='Commitment Date',
+    #readonly=True, store=False, index=True, copy=False, compute='_get_dates',)
     sale_count = fields.Float(string='Sale Order',
     compute='_get_sale_count', readonly=True,store=False)
 
@@ -45,13 +45,13 @@ class MrpProduction(models.Model):
             production.move_raw_ids.action_cancel()
         return True
 
-    @api.multi
-    def _get_dates(self):
-        def get_parent_move(move):
-            if move.move_dest_id:
-                return get_parent_move(move.move_dest_id)
-            return move
-        for production in self:
-            move = get_parent_move(production.move_finished_ids[0])
-            production.requested_date = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.requested_date or False
-            production.commitment_date = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.commitment_date or False
+    #@api.multi
+    #def _get_dates(self):
+    #    def get_parent_move(move):
+    #        if move.move_dest_id:
+    #            return get_parent_move(move.move_dest_id)
+    #        return move
+    #    for production in self:
+    #        move = get_parent_move(production.move_finished_ids[0])
+    #        production.requested_date = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.requested_date or False
+    #        production.commitment_date = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.commitment_date or False

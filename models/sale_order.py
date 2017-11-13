@@ -8,50 +8,68 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    mfg_count = fields.Float(string='Mfg Orders',
-    compute='_get_mfg_count', readonly=True,
-    store=False)
-    workorder_count = fields.Float(string='Workorders',
-    compute='_get_wo_count', readonly=True,
-    store=False)
-
-    @api.multi
-    def _get_mfg_count(self):
-        for order in self:
-            mfg_orders = len(order.env['mrp.production'].search([('procurement_group_id.name','=',order.name)]))
-            order.mfg_count = mfg_orders
-
-    @api.multi
-    def action_view_mfg_orders(self):
-        action_data = self.env.ref('mrp.mrp_production_action').read()[0]
-        action_data['domain'] = [('procurement_group_id.name','=',self.name)]
-        return action_data
+    workorder_count = fields.Integer(string='Workorders',compute='_get_wo_count',readonly=True,store=False)
+    workorder_ids = fields.One2many('sale.workorder', 'order_id', string='Workorders')
+    show_release = fields.Char(string='Show Release (Technical)',compute='_show_release', readonly=True,store=False)
 
     @api.multi
     def _get_wo_count(self):
         for order in self:
-            mfg_orders = order.env['mrp.production'].search([('procurement_group_id.name','=',order.name)])
-            total_count = 0
-            for mfg in mfg_orders:
-                for work_order in mfg.workorder_ids:
-                    total_count += 1
-            order.workorder_count = total_count
+            order.workorder_count = len(order.workorder_ids)
 
     @api.multi
     def action_view_work_orders(self):
-        action_data = self.env.ref('sh_mrp_mod.action_sale_workorder_form').read()[0]
-        action_data['res_id'] = self.env['sale.workorder'].search([('order_id','=',self.id)],limit=1).id
-        return action_data
+        action = self.env.ref('sh_mrp_mod.action_sale_workorder_tree')
+        result = action.read()[0]
+        result['context'] = {}
+        all_workorder_ids = sum([order.workorder_ids.ids for order in self], [])
+        if len(all_workorder_ids) > 1:
+            result['domain'] = "[('id','in',[" + ','.join(map(str, all_workorder_ids)) + "])]"
+        elif len(all_workorder_ids) == 1:
+            res = self.env.ref('sh_mrp_mod.view_sale_workorder_form', False)
+            result['views'] = [(res and res.id or False, 'form')]
+            result['res_id'] = all_workorder_ids and all_workorder_ids[0] or False
+        return result
 
     @api.multi
-    def action_confirm(self):
-        super(SaleOrder, self).action_confirm()
+    def _show_release(self):
         for order in self:
-            mfg_orders = order.env['mrp.production'].search([('procurement_group_id.name','=',order.name)])
-            if mfg_orders:
-                sale_workorder = order.env['sale.workorder'].create({'order_id':order.id})
-            for mfg in mfg_orders:
-                mfg.button_plan()
-                for work_order in mfg.workorder_ids:
-                    work_order.sale_workorder_id = sale_workorder
-        return True
+            order.show_release = False
+            for l in order.order_line:
+                if l.product_id.product_tmpl_id.bom_ids and l.qty_delivered < l.product_uom_qty:
+                    order.show_release = True
+
+    @api.multi
+    def release_production(self):
+        for order in self:
+            create_workorder = False
+            created_mfg_orders = []
+            for l in order.order_line:
+                if l.product_id.product_tmpl_id.bom_ids:
+                    to_produce_qty = l.product_uom_qty - l.qty_delivered
+                    if to_produce_qty > 0:
+                        print l.product_id.product_tmpl_id.uom_id.id
+                        mfg_values= {
+                            'product_id': l.product_id.id,
+                            'product_uom_id': l.product_uom.id,
+                            'bom_id': l.product_id.product_tmpl_id.bom_ids[0].id,
+                            'product_qty': to_produce_qty,
+                            'procurement_group_id': order.procurement_group_id.id,
+                        }
+                        mfg_order = order.env['mrp.production'].create(mfg_values)
+                        mfg_order.button_plan()
+                        create_workorder = True
+                        created_mfg_orders.append(mfg_order.id)
+
+
+            if create_workorder == True:
+                sale_workorder_values = {
+                    'order_id': order.id,
+                    'manufacturing_ids': [(6, 0, created_mfg_orders)],
+                    'requested_date': order.requested_date,
+                    'commitment_date': order.commitment_date,
+                    'partner_id': order.partner_id.id,
+                    'partner_shipping_id': order.partner_shipping_id.id,
+                    'user_id': order.user_id.id,
+                }
+                sale_workorder = order.env['sale.workorder'].create(sale_workorder_values)

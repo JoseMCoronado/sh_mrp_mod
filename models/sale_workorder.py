@@ -10,13 +10,16 @@ class SaleWorkorder(models.Model):
     _description = 'Sale Work Order'
     _order = 'id desc'
 
-    name = fields.Char(string='Work Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
-    workorder_ids = fields.One2many('mrp.workorder', 'sale_workorder_id', string='Workorder Lines')
-    order_id = fields.Many2one('sale.order', string='Sale Workorder')
+    name = fields.Char(string='Work Order Reference', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
+    manufacturing_ids = fields.One2many('mrp.production', 'sale_workorder_id', string='Manufacturing Lines')
+    order_id = fields.Many2one('sale.order', string='Sale Order')
     requested_date = fields.Datetime(string='Requested Date',
     readonly=False, store=True, index=True, copy=False)
     commitment_date = fields.Datetime(string='Commitment Date',
     readonly=False, store=True, index=True, copy=False)
+    partner_id = fields.Many2one('res.partner', string='Customer')
+    partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address')
+    user_id = fields.Many2one('res.users', string='Salesperson')
 
 
     @api.model

@@ -2,7 +2,7 @@
 <odoo>
     <record model="ir.actions.act_window" id="action_mrp_entry_wizard">
       <field name="auto_search" eval="True"/>
-      <field name="context">{}</field>
+      <field name="context">{'default_operators':1}</field>
       <field name="groups_id" eval="[(6, 0, [])]"/>
       <field name="limit">80</field>
       <field name="name">Enter Quantity Produced</field>

@@ -64,6 +64,11 @@
           <field name="operators"/>
           <field name="man_hours" widget="float_time"/>
         </xpath>
+        <xpath expr="//notebook/page" position="before">
+          <page string="Special Instructions" attrs="{'invisible': [('special_instructions', '=', False)]}">
+            <field name="special_instructions" widget="pdf_viewer"/>
+          </page>
+        </xpath>
       </field>
     </record>
     <record model="ir.ui.view" id="mrp_workorder_tree_view_mod">

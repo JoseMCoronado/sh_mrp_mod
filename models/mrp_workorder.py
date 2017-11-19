@@ -11,6 +11,8 @@ class MrpWorkorder(models.Model):
     commitment_date = fields.Datetime(string='Commitment Date',
     readonly=True, store=True, index=True, copy=False,related='production_id.sale_workorder_id.commitment_date')
     done_user = fields.Many2one('res.users', string='Completed By')
+    special_instructions = fields.Binary('Special Instructions', related='product_id.special_instructions', readonly=True)
+    
 
     @api.multi
     def button_finish(self):

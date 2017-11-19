@@ -69,6 +69,14 @@
             <field name="special_instructions" widget="pdf_viewer"/>
           </page>
         </xpath>
+        <xpath expr="//field[@name='product_id']" position="replace">
+          <label for="product_id" string="To Produce"/>
+          <div class="o_row">
+              <field name="product_id"/>
+              <field name="attribute_id" invisible="1"/>
+              <button attrs="{'invisible':[('attribute_id','=',False)]}" string="Attributes" type="object" name="open_attribute_values"/>
+          </div>
+        </xpath>
       </field>
     </record>
     <record model="ir.ui.view" id="mrp_workorder_tree_view_mod">
@@ -93,6 +101,8 @@
         <xpath expr="//field[@name='name']" position="replace"/>
         <xpath expr="//field[@name='date_planned_start']" position="before">
           <field name="product_id"/>
+          <field name="attribute_id" invisible="1"/>
+          <button attrs="{'invisible':[('attribute_id','=',False)]}" icon="fa fa-dot-circle-o" type="object" name="open_attribute_values"/>
         </xpath>
         <xpath expr="//field[@name='date_planned_start']" position="after">
           <field name="requested_date"/>

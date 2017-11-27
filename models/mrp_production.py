@@ -6,6 +6,9 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     sale_workorder_id = fields.Many2one('sale.workorder', string='Sale Workorder')
+    sale_line_id = fields.Many2one('sale.order.line', string='Sale Workorder')
+    sale_order_line_desc = fields.Text('Sale Line Desc', related='sale_line_id.name',readonly=True)
+
 
     @api.multi
     def _generate_moves(self):

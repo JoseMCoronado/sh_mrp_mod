@@ -74,8 +74,11 @@
           <div class="o_row">
               <field name="product_id"/>
               <field name="attribute_id" invisible="1"/>
-              <button attrs="{'invisible':[('attribute_id','=',False)]}" string="Attributes" type="object" name="open_attribute_values"/>
+              <button string="Attributes" type="object" name="open_attribute_values"/>
           </div>
+        </xpath>
+        <xpath expr="//field[@name='is_produced']" position="after">
+          <field name="sale_order_line_desc"/>
         </xpath>
       </field>
     </record>
@@ -87,6 +90,7 @@
       <field name="arch" type="xml">
         <xpath expr="//field[@name='name']" position="after">
           <field name="sale_workorder_id" invisible="1"/>
+          <button name="action_view_workorder" string="Go to Work Order" type="object"/>
         </xpath>
         <xpath expr="//field[@name='date_planned_start']" position="attributes">
           <attribute name="invisible">1</attribute>
@@ -102,7 +106,9 @@
         <xpath expr="//field[@name='date_planned_start']" position="before">
           <field name="product_id"/>
           <field name="attribute_id" invisible="1"/>
-          <button attrs="{'invisible':[('attribute_id','=',False)]}" icon="fa fa-dot-circle-o" type="object" name="open_attribute_values"/>
+          <field name="sale_order_line_desc"/>
+          <button string="Attributes" type="object" name="open_attribute_values"/>
+
         </xpath>
         <xpath expr="//field[@name='date_planned_start']" position="after">
           <field name="requested_date"/>

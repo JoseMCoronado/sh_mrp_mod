@@ -55,12 +55,12 @@ class SaleOrder(models.Model):
                             'bom_id': l.product_id.product_tmpl_id.bom_ids[0].id,
                             'product_qty': to_produce_qty,
                             'procurement_group_id': order.procurement_group_id.id,
+                            'sale_line_id': l.id,
                         }
                         mfg_order = order.env['mrp.production'].create(mfg_values)
                         mfg_order.button_plan()
                         create_workorder = True
                         created_mfg_orders.append(mfg_order.id)
-
 
             if create_workorder == True:
                 sale_workorder_values = {
@@ -73,6 +73,12 @@ class SaleOrder(models.Model):
                     'user_id': order.user_id.id,
                 }
                 sale_workorder = order.env['sale.workorder'].create(sale_workorder_values)
+                action = order.env.ref('sh_mrp_mod.action_sale_workorder_tree')
+                result = action.read()[0]
+                res = order.env.ref('sh_mrp_mod.view_sale_workorder_form', False)
+                result['views'] = [(res and res.id or False, 'form')]
+                result['res_id'] = sale_workorder.id
+                return result
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

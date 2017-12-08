@@ -46,9 +46,9 @@ class SaleOrder(models.Model):
             created_mfg_orders = []
             for l in order.order_line:
                 if l.product_id.product_tmpl_id.bom_ids:
-                    to_produce_qty = l.product_uom_qty - l.qty_delivered
+                    to_produce_qty = l.product_uom_qty - sum(order.env['mrp.production'].search([('sale_line_id','=',l.id)]).mapped('product_qty'))
+                    print to_produce_qty
                     if to_produce_qty > 0:
-                        print l.product_id.product_tmpl_id.uom_id.id
                         mfg_values= {
                             'product_id': l.product_id.id,
                             'product_uom_id': l.product_uom.id,

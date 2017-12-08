@@ -21,7 +21,7 @@ class MrpWorkorder(models.Model):
         if any(r.state in ['done','progress'] for r in self.production_id.workorder_ids):
             self.production_id.state = 'progress'
         if all(wo.state == 'done' for wo in self.production_id.workorder_ids):
-            orself.production_idder.state = 'done'
+            self.production_id.state = 'done'
             self.production_id.button_mark_done()
         if all(r.state in ['cancel'] for r in self.production_id.workorder_ids):
             self.production_id.state = 'cancel'

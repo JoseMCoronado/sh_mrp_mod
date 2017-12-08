@@ -74,11 +74,8 @@
           <div class="o_row">
               <field name="product_id"/>
               <field name="attribute_id" invisible="1"/>
-              <button string="Attributes" type="object" name="open_attribute_values"/>
+              <field name="sale_order_line_desc" string="Attributes"/>
           </div>
-        </xpath>
-        <xpath expr="//field[@name='is_produced']" position="after">
-          <field name="sale_order_line_desc"/>
         </xpath>
       </field>
     </record>
@@ -107,7 +104,6 @@
           <field name="product_id"/>
           <field name="attribute_id" invisible="1"/>
           <field name="sale_order_line_desc"/>
-          <button string="Attributes" type="object" name="open_attribute_values"/>
 
         </xpath>
         <xpath expr="//field[@name='date_planned_start']" position="after">

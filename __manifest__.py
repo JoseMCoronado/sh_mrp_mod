@@ -21,6 +21,7 @@ RESPONSIBILITY FOR ANY BEHAVIOR ONCE INSTALLED.
             'views/sale_workorder_views.xml',
             'views/product_template_views.xml',
             'views/ir_model_access.xml',
+            'views/ir_ui_qweb.xml',
             ],
     'installable': True,
 }

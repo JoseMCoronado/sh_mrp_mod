@@ -7,3 +7,4 @@ import mrp_workorder
 import mrp_workcenter
 import mrp_entry_wizard
 import sale_workorder
+import stock_picking

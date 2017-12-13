@@ -28,3 +28,10 @@ class SaleWorkorder(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('sale.workorder.sequence') or _('New')
         result = super(SaleWorkorder, self).create(vals)
         return result
+
+    @api.multi
+    def delete_workorder(self):
+        for wo in self:
+            for mo in wo.manufacturing_ids:
+                mo.action_cancel()
+            wo.unlink()

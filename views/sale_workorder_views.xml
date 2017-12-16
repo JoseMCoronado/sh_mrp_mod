@@ -39,7 +39,8 @@
                         <button type="object" name="action_update_mo_qty" string="Update" class="oe_link" attrs="{'invisible': [('state','in',['done','cancel'])]}"/>
                         <field name="qty_produced"/>
                         <field name="state"/>
-                        <button name="action_view_workorders" type="object" string="Routing"/>
+                        <button name="action_view_workorders" type="object" string="ROUTING"/>
+                        <button name="remove_from_workorder" type="object" string="REMOVE"/>
                       </tree>
                       <form string="Edit">
                         <group>

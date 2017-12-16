@@ -36,8 +36,10 @@ class SaleOrder(models.Model):
         for order in self:
             order.show_release = False
             for l in order.order_line:
-                if l.product_id.product_tmpl_id.bom_ids and l.qty_delivered < l.product_uom_qty:
-                    order.show_release = True
+                if l.product_id.product_tmpl_id.bom_ids:
+                    manufactured_qty = sum(m.product_qty for m in l.manufacturing_ids.filtered(lambda r: r.state != 'cancel'))
+                    if manufactured_qty < l.product_uom_qty:
+                        order.show_release = True
 
     @api.multi
     def release_production(self):
@@ -46,7 +48,7 @@ class SaleOrder(models.Model):
             created_mfg_orders = []
             for l in order.order_line:
                 if l.product_id.product_tmpl_id.bom_ids:
-                    to_produce_qty = l.product_uom_qty - sum(order.env['mrp.production'].search([('sale_line_id','=',l.id)]).mapped('product_qty'))
+                    to_produce_qty = l.product_uom_qty - sum(order.env['mrp.production'].search([('sale_line_id','=',l.id)]).filtered(lambda r: r.state != 'cancel').mapped('product_qty'))
                     print to_produce_qty
                     if to_produce_qty > 0:
                         mfg_values= {
@@ -82,6 +84,8 @@ class SaleOrder(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
+
+    manufacturing_ids = fields.One2many('mrp.production', 'sale_line_id', string='Manufacturing Orders')
 
     @api.onchange('product_uom_qty', 'product_uom', 'route_id')
     def _onchange_product_id_check_availability(self):

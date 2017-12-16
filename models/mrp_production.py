@@ -31,3 +31,15 @@ class MrpProduction(models.Model):
     def action_view_workorders(self):
         action_data = self.env.ref('mrp.action_mrp_workorder_production_specific').read()[0]
         return action_data
+
+    @api.multi
+    def remove_from_workorder(self):
+        for mrp in self:
+            for wo in mrp.workorder_ids:
+                wo.action_cancel()
+            mrp.sale_workorder_id = False
+            mrp.action_cancel()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+            }

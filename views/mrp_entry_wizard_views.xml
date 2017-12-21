@@ -31,4 +31,41 @@
             </form>
         </field>
     </record>
+    <record model="ir.actions.act_window" id="action_mrp_hold_wizard">
+      <field name="auto_search" eval="True"/>
+      <field name="context">{}</field>
+      <field name="groups_id" eval="[(6, 0, [])]"/>
+      <field name="limit">80</field>
+      <field name="name">Rework/Hold</field>
+      <field name="res_model">work.order.hold.reason.wizard</field>
+      <field name="target">new</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" eval="False"/>
+      <field name="view_ids" eval="[(6, 0, [])]"/>
+      <field name="view_mode">form</field>
+      <field name="view_type">form</field>
+    </record>
+
+    <record model="ir.ui.view" id="view_mrp_hold_wizard">
+        <field name="name">x_gfp.hold.reason.wizard</field>
+        <field name="model">work.order.hold.reason.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="type"/>
+                    <field name="workorder_id" invisible="1"/>
+                </group>
+                <group>
+                  <field name="workorder_to_id" attrs="{'invisible':[('type','in',['hold'])]}"/>
+                  <field name="reason" attrs="{'invisible':[('type','in',['send'])]}"/>
+                </group>
+                <footer>
+                    <button name="hold_wo" string="Submit" type="object" class="btn-primary" attrs="{'invisible':[('type','!=','hold')]}"/>
+                    <button name="next_wo" string="Submit" type="object" class="btn-primary" attrs="{'invisible':[('type','!=','send')]}"/>
+                    <button name="rework_wo" string="Submit" type="object" class="btn-primary" attrs="{'invisible':[('type','!=','rework')]}"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
 </odoo>

@@ -8,7 +8,19 @@ class MrpProduction(models.Model):
     sale_workorder_id = fields.Many2one('sale.workorder', string='Sale Workorder')
     sale_line_id = fields.Many2one('sale.order.line', string='Sale Workorder')
     sale_order_line_desc = fields.Text('Sale Line Desc', related='sale_line_id.name',readonly=True)
+    stage = fields.Text('stage',compute='_compute_stage',readonly=True,store=False)
 
+    @api.multi
+    def _compute_stage(self):
+        for mrp in self:
+            active_wo_ids = mrp.workorder_ids.filtered(lambda r: r.state in ['ready','rework','hold'])
+            if len(active_wo_ids)>0:
+                text = ""
+                for wo in active_wo_ids:
+                    text += wo.workcenter_id.name + " ["+ wo.state +"] " + "\n"
+                mrp.stage = text
+            else:
+                mrp.stage = "Finished"
 
     @api.multi
     def _generate_moves(self):

@@ -14,6 +14,21 @@ class MrpWorkorder(models.Model):
     special_instructions = fields.Binary('Special Instructions', related='product_id.special_instructions', readonly=True)
     attribute_id = fields.Many2one('line.attribute','Custom Attributes', compute='_compute_attribute', store=False)
     sale_order_line_desc = fields.Text('Sale Line Desc', related='attribute_id.order_line.name',readonly=True)
+    state = fields.Selection([
+        ('pending', 'Pending'),
+        ('ready', 'Ready'),
+        ('rework', 'Rework'),
+        ('hold', 'On Hold'),
+        ('progress', 'In Progress'),
+        ('done', 'Finished'),
+        ('cancel', 'Cancelled')], string='Status',
+        default='pending')
+    reason = fields.Text(string='Reason')
+
+    @api.multi
+    def button_not_hold(self):
+        for wo in self:
+            wo.state = 'ready'
 
     @api.multi
     def button_finish(self):

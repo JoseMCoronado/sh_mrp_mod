@@ -36,6 +36,16 @@
       <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view_inherit"/>
       <field name="priority">99</field>
       <field name="arch" type="xml">
+        <xpath expr="//header" position="inside">
+          <button name="%(action_mrp_hold_wizard)d" type="action" string="Rework/Hold" attrs="{'invisible':[('state','in',['pending','done','cancel','hold'])]}"/>
+          <button name="button_not_hold" type="object" string="Remove Hold" attrs="{'invisible':[('state','not in',['hold'])]}"/>
+        </xpath>
+        <xpath expr="//div[@role='alert']" position="replace">
+          <div class="alert alert-danger alert-dismissible text-left" role="alert" attrs="{'invisible': [('state', 'not in', ['hold','rework'])]}">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
+              <field name="reason" style="height: 50px;"/>
+          </div>
+        </xpath>
         <!--Removed buttons to just have done per workorder-->
         <xpath expr="//button[@name='button_finish']" position="replace"/>
         <xpath expr="//button[@name='button_scrap']" position="replace"/>
@@ -107,7 +117,6 @@
           <field name="product_id"/>
           <field name="attribute_id" invisible="1"/>
           <field name="sale_order_line_desc"/>
-
         </xpath>
         <xpath expr="//field[@name='date_planned_start']" position="after">
           <field name="requested_date"/>
@@ -121,9 +130,6 @@
         </xpath>
       </field>
     </record>
-    <record model="ir.actions.act_window" id="mrp.action_work_orders">
-      <field name="context">{'group_by':'sale_workorder_id'}</field>
-    </record>
     <record model="ir.ui.view" id="view_picking_form_mod">
       <field name="name">x_gfp.stock.picking.form.mod</field>
       <field name="model">stock.picking</field>
@@ -133,6 +139,17 @@
         <xpath expr="//button[@name='force_assign']" position="replace"/>
         <xpath expr="//header" position="inside">
           <button name="print_packing_slip" type="object" string="Print Packing Slip"/>
+        </xpath>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="mrp_routing_workcenter_form_view_mod">
+      <field name="name">x_gfp.mrp.routing.workcenter.form.mod</field>
+      <field name="model">mrp.routing.workcenter</field>
+      <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+      <field name="priority">99</field>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='sequence']" position="after">
+          <field name="initial_ops"/>
         </xpath>
       </field>
     </record>

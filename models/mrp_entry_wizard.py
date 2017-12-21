@@ -26,3 +26,50 @@ class WorkOrderEntryWizard(models.TransientModel):
             if wo.qty_produced < wo.qty_production:
                 wo.button_pending()
             wo.time_ids[0].operators = wizard.operators
+
+class WorkOrderHoldReasonWizard(models.TransientModel):
+    _name = "work.order.hold.reason.wizard"
+    _description = 'Work Order Entry Wizard'
+
+    reason = fields.Text(string='Reason')
+    workorder_id = fields.Many2one('mrp.workorder', string="Workorder")
+    workorder_to_id = fields.Many2one('mrp.workorder', string="Rework to")
+    type = fields.Selection([
+        ('send', 'Rework Next Step'),
+        ('rework', 'Rework'),
+        ('hold', 'Hold')], string='State',
+        copy=False, default='send')
+
+    @api.model
+    def default_get(self, fields):
+        res = super(WorkOrderHoldReasonWizard, self).default_get(fields)
+        workorder_id = self.env['mrp.workorder'].browse(self.env.context.get('active_id'))
+        res.update({'workorder_id': workorder_id.id})
+        return res
+
+    @api.multi
+    def hold_wo(self):
+        for wiz in self:
+            wiz.workorder_id.state = 'hold'
+            wiz.workorder_id.reason = wiz.reason
+
+    @api.multi
+    def next_wo(self):
+        for wiz in self:
+            wiz.workorder_id.state = 'done'
+            wiz.workorder_to_id.state = 'rework'
+
+    @api.multi
+    def rework_wo(self):
+        for wiz in self:
+            wiz.workorder_to_id.state = 'rework'
+            wiz.workorder_to_id.reason = wiz.reason
+            wiz.workorder_id.state = 'hold'
+            wiz.workorder_id.reason = wiz.reason
+
+    @api.onchange('type')
+    def apply_domain(self):
+        for wiz in self:
+            ids = wiz.workorder_id.production_id.workorder_ids.ids
+            domain = {'workorder_to_id': [('id', 'in', ids)]}
+            return {'domain': domain}

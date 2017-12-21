@@ -61,6 +61,9 @@ class SaleOrder(models.Model):
                         }
                         mfg_order = order.env['mrp.production'].create(mfg_values)
                         mfg_order.button_plan()
+                        for wo in mfg_order.workorder_ids:
+                            if wo.operation_id.initial_ops == True:
+                                wo.state = 'ready'
                         create_workorder = True
                         created_mfg_orders.append(mfg_order.id)
 

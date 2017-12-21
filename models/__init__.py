@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import mrp_routing
 import sale_order
 import product
 import mrp_production

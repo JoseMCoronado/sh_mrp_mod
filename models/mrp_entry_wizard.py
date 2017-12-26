@@ -33,10 +33,10 @@ class WorkOrderHoldReasonWizard(models.TransientModel):
 
     reason = fields.Text(string='Reason')
     workorder_id = fields.Many2one('mrp.workorder', string="Workorder")
-    workorder_to_id = fields.Many2one('mrp.workorder', string="Rework to")
+    workorder_to_id = fields.Many2one('mrp.workorder', string="Next operation:")
     type = fields.Selection([
-        ('send', 'Rework Next Step'),
         ('rework', 'Rework'),
+        ('send', 'End Rework'),
         ('hold', 'Hold')], string='State',
         copy=False, default='send')
 
@@ -64,8 +64,6 @@ class WorkOrderHoldReasonWizard(models.TransientModel):
         for wiz in self:
             wiz.workorder_to_id.state = 'rework'
             wiz.workorder_to_id.reason = wiz.reason
-            wiz.workorder_id.state = 'hold'
-            wiz.workorder_id.reason = wiz.reason
 
     @api.onchange('type')
     def apply_domain(self):

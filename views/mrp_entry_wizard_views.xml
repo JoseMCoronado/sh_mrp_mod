@@ -52,7 +52,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="type"/>
+                    <field name="type" invisible="1"/>
                     <field name="workorder_id" invisible="1"/>
                 </group>
                 <group>

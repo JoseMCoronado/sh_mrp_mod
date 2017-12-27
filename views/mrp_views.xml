@@ -37,7 +37,9 @@
       <field name="priority">99</field>
       <field name="arch" type="xml">
         <xpath expr="//header" position="inside">
-          <button name="%(action_mrp_hold_wizard)d" type="action" string="Rework/Hold" attrs="{'invisible':[('state','in',['pending','done','cancel','hold'])]}"/>
+          <button name="%(action_mrp_hold_wizard)d" type="action" string="Rework" context="{'default_type':'rework'}" attrs="{'invisible':[('state','in',['done','cancel','hold','rework'])]}"/>
+          <button name="%(action_mrp_hold_wizard)d" type="action" string="End Rework" context="{'default_type':'send'}" attrs="{'invisible':[('state','not in',['rework'])]}"/>
+          <button name="%(action_mrp_hold_wizard)d" type="action" string="Hold" context="{'default_type':'hold'}" attrs="{'invisible':[('state','in',['done','cancel','hold'])]}"/>
           <button name="button_not_hold" type="object" string="Remove Hold" attrs="{'invisible':[('state','not in',['hold'])]}"/>
         </xpath>
         <xpath expr="//div[@role='alert']" position="replace">

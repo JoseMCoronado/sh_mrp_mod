@@ -57,13 +57,17 @@ class WorkOrderHoldReasonWizard(models.TransientModel):
     def next_wo(self):
         for wiz in self:
             wiz.workorder_id.state = 'done'
-            wiz.workorder_to_id.state = 'rework'
+            wiz.workorder_id.on_rework = False
+            wiz.workorder_to_id.state = 'ready'
+            wiz.workorder_to_id.on_rework = True
 
     @api.multi
     def rework_wo(self):
         for wiz in self:
             wiz.workorder_to_id.state = 'rework'
             wiz.workorder_to_id.reason = wiz.reason
+            wiz.workorder_to_id.on_rework = True
+            wiz.workorder_id.state = 'pending'
 
     @api.onchange('type')
     def apply_domain(self):

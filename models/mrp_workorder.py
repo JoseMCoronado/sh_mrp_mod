@@ -24,6 +24,7 @@ class MrpWorkorder(models.Model):
         ('cancel', 'Cancelled')], string='Status',
         default='pending')
     reason = fields.Text(string='Reason')
+    on_rework = fields.Boolean(string='Rework')
 
     @api.multi
     def button_not_hold(self):

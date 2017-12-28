@@ -37,13 +37,14 @@
       <field name="priority">99</field>
       <field name="arch" type="xml">
         <xpath expr="//header" position="inside">
-          <button name="%(action_mrp_hold_wizard)d" type="action" string="Rework" context="{'default_type':'rework'}" attrs="{'invisible':[('state','in',['done','cancel','hold','rework'])]}"/>
-          <button name="%(action_mrp_hold_wizard)d" type="action" string="End Rework" context="{'default_type':'send'}" attrs="{'invisible':[('state','not in',['rework'])]}"/>
+          <field name="on_rework" invisible="1"/>
+          <button name="%(action_mrp_hold_wizard)d" type="action" string="Rework" context="{'default_type':'rework'}" attrs="{'invisible':['|',('state','in',['done','cancel','hold','rework']),('on_rework','=',True)]}"/>
+          <button name="%(action_mrp_hold_wizard)d" type="action" string="End Rework" context="{'default_type':'send'}" attrs="{'invisible':[('on_rework','=',False)]}"/>
           <button name="%(action_mrp_hold_wizard)d" type="action" string="Hold" context="{'default_type':'hold'}" attrs="{'invisible':[('state','in',['done','cancel','hold'])]}"/>
           <button name="button_not_hold" type="object" string="Remove Hold" attrs="{'invisible':[('state','not in',['hold'])]}"/>
         </xpath>
         <xpath expr="//div[@role='alert']" position="replace">
-          <div class="alert alert-danger alert-dismissible text-left" role="alert" attrs="{'invisible': [('state', 'not in', ['hold','rework'])]}">
+          <div class="alert alert-danger alert-dismissible text-left" role="alert" attrs="{'invisible': [('state', 'not in', ['hold']),('on_rework','=',False)]}">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
               <field name="reason" style="height: 50px;"/>
           </div>

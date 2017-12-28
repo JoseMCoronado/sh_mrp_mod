@@ -34,6 +34,7 @@ class MrpWorkorder(models.Model):
     @api.multi
     def button_finish(self):
         super(MrpWorkorder, self).button_finish()
+        self.on_rework = False
         if any(r.state in ['done','progress'] for r in self.production_id.workorder_ids):
             self.production_id.state = 'progress'
         if all(wo.state == 'done' for wo in self.production_id.workorder_ids):

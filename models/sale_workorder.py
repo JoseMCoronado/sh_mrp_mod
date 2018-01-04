@@ -20,6 +20,7 @@ class SaleWorkorder(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer')
     partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address')
     user_id = fields.Many2one('res.users', string='Salesperson')
+    hide_complete = fields.Boolean('Hide Complete',compute="_hide_complete",store=False,readonly=True)
 
 
     @api.model
@@ -35,3 +36,35 @@ class SaleWorkorder(models.Model):
             for mo in wo.manufacturing_ids:
                 mo.action_cancel()
             wo.unlink()
+
+    @api.multi
+    def print_sale_workorder(self):
+        for wo in self:
+            active_id = wo.id
+            datas = {'ids' : [active_id]}
+            return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'sh_mrp_mod.report_workorder',
+                'datas': datas,
+            }
+
+    @api.multi
+    def complete_workorder(self):
+        for wo in self:
+            if any(m.state not in ['done','cancel'] for m in wo.manufacturing_ids):
+                for m in wo.manufacturing_ids:
+                    for w in m.workorder_ids:
+                        if w.state not in ['done','cancel']:
+                            w.record_production()
+                    if m.state not in ['done','cancel']:
+                        m.state = 'done'
+                        m.button_mark_done()
+            return True
+
+    @api.multi
+    def _hide_complete(self):
+        for wo in self:
+            if any(m.state not in ['done','cancel'] for m in wo.manufacturing_ids):
+                wo.hide_complete = False
+            else:
+                wo.hide_complete = True

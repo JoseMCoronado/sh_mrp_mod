@@ -7,7 +7,10 @@
         <field name="arch" type="xml">
           <form create="0" delete="0">
             <header>
-              <button name="delete_workorder" type="object" string="Delete Workorder"/>
+              <field name="hide_complete" invisible="1"/>
+              <button name="complete_workorder" type="object" string="Complete Workorder" class="btn-success" attrs="{'invisible':[('hide_complete','=',True)]}"/>
+              <button name="print_sale_workorder" type="object" string="Print Workorder" class="oe_highlight" style="background-color:#ff7f00"/>
+              <button name="delete_workorder" type="object" string="Delete Workorder" class="btn-danger"/>
             </header>
             <sheet>
               <div class="oe_title">

@@ -11,7 +11,16 @@ class SaleOrder(models.Model):
     workorder_count = fields.Integer(string='Workorders',compute='_get_wo_count',readonly=True,store=False)
     workorder_ids = fields.One2many('sale.workorder', 'order_id', string='Workorders')
     show_release = fields.Char(string='Show Release (Technical)',compute='_show_release', readonly=True,store=False)
-
+    requested_date = fields.Datetime('Requested Date', readonly=False,copy=False,
+                                     help="Date by which the customer has requested the items to be "
+                                          "delivered.\n"
+                                          "When this Order gets confirmed, the Delivery Order's "
+                                          "expected date will be computed based on this date and the "
+                                          "Company's Security Delay.\n"
+                                          "Leave this field empty if you want the Delivery Order to be "
+                                          "processed as soon as possible. In that case the expected "
+                                          "date will be computed using the default method: based on "
+                                          "the Product Lead Times and the Company's Security Delay.")
     @api.multi
     def _get_wo_count(self):
         for order in self:

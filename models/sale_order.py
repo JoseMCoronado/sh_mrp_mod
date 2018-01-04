@@ -21,6 +21,10 @@ class SaleOrder(models.Model):
                                           "processed as soon as possible. In that case the expected "
                                           "date will be computed using the default method: based on "
                                           "the Product Lead Times and the Company's Security Delay.")
+    commitment_date = fields.Datetime(readonly=False, string='Commitment Date', store=True,
+                                      help="Date by which the products are sure to be delivered. This is "
+                                           "a date that you can promise to the customer, based on the "
+                                           "Product Lead Times.")
     @api.multi
     def _get_wo_count(self):
         for order in self:
@@ -49,6 +53,10 @@ class SaleOrder(models.Model):
                     manufactured_qty = sum(m.product_qty for m in l.manufacturing_ids.filtered(lambda r: r.state != 'cancel'))
                     if manufactured_qty < l.product_uom_qty:
                         order.show_release = True
+
+    @api.onchange('requested_date')
+    def onchange_requested_date(self):
+        return False
 
     @api.multi
     def release_production(self):

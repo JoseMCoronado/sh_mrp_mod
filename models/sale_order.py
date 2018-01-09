@@ -58,6 +58,22 @@ class SaleOrder(models.Model):
     def onchange_requested_date(self):
         return False
 
+    @api.depends('date_order', 'order_line.customer_lead')
+    def _compute_commitment_date(self):
+        """Compute the commitment date"""
+        for order in self:
+            if order.commitment_date == False:
+                dates_list = []
+                order_datetime = fields.Datetime.from_string(order.date_order)
+                for line in order.order_line.filtered(lambda x: x.state != 'cancel'):
+                    dt = order_datetime + timedelta(days=line.customer_lead or 0.0)
+                    dates_list.append(dt)
+                if dates_list:
+                    commit_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
+                    order.commitment_date = fields.Datetime.to_string(commit_date)
+            else:
+                return False
+
     @api.multi
     def release_production(self):
         for order in self:

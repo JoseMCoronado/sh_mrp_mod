@@ -21,8 +21,8 @@ class SaleOrder(models.Model):
                                           "processed as soon as possible. In that case the expected "
                                           "date will be computed using the default method: based on "
                                           "the Product Lead Times and the Company's Security Delay.")
-    commitment_date = fields.Datetime(readonly=False, string='Commitment Date', store=True,
-                                      compute='_compute_commitment_date', help="Date by which the products are sure to be delivered. This is "
+    commitment_date_real = fields.Datetime(readonly=False, string='Commitment Date', store=True,
+                                      help="Date by which the products are sure to be delivered. This is "
                                            "a date that you can promise to the customer, based on the "
                                            "Product Lead Times.")
     @api.multi
@@ -58,11 +58,6 @@ class SaleOrder(models.Model):
     def onchange_requested_date(self):
         return False
 
-    @api.depends('date_order', 'order_line.customer_lead')
-    def _compute_commitment_date(self):
-        for order in self:
-            return False
-
     @api.multi
     def release_production(self):
         for order in self:
@@ -94,7 +89,7 @@ class SaleOrder(models.Model):
                     'order_id': order.id,
                     'manufacturing_ids': [(6, 0, created_mfg_orders)],
                     'requested_date': order.requested_date,
-                    'commitment_date': order.commitment_date,
+                    'commitment_date': order.commitment_date_real,
                     'partner_id': order.partner_id.id,
                     'partner_shipping_id': order.partner_shipping_id.id,
                     'user_id': order.user_id.id,

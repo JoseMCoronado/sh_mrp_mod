@@ -89,6 +89,10 @@
               <field name="product_id"/>
               <field name="attribute_id" invisible="1"/>
           </div>
+          <label for="product_kit_id" string="Kit"/>
+          <div class="o_row">
+            <field name="product_kit_id" string="Kit"/>
+          </div>
           <label for="sale_order_line_desc" string="Attributes"/>
           <div class="o_row">
             <field name="sale_order_line_desc" string="Attributes"/>
@@ -118,6 +122,7 @@
         <xpath expr="//field[@name='name']" position="replace"/>
         <xpath expr="//field[@name='date_planned_start']" position="before">
           <field name="product_id"/>
+          <field name="product_kit_id"/>
           <field name="attribute_id" invisible="1"/>
           <field name="sale_order_line_desc"/>
         </xpath>

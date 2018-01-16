@@ -25,6 +25,7 @@ class MrpWorkorder(models.Model):
         default='pending')
     reason = fields.Text(string='Reason')
     on_rework = fields.Boolean(string='Rework')
+    product_kit_id = fields.Many2one('product.product', string='Kit Product', related="production_id.product_kit_id")
 
     @api.multi
     def button_not_hold(self):

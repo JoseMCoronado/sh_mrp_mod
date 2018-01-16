@@ -37,6 +37,7 @@
                     <field nolabel="1" readonly="1" name="manufacturing_ids">
                       <tree editable="bottom">
                         <field name="product_id"/>
+                        <field name="product_kit_id"/>
                         <field name="sale_order_line_desc"/>
                         <field name="product_qty"/>
                         <button type="object" name="action_update_mo_qty" string="Update" class="oe_link" attrs="{'invisible': [('state','in',['done','cancel'])]}"/>

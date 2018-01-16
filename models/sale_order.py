@@ -50,9 +50,16 @@ class SaleOrder(models.Model):
             order.show_release = False
             for l in order.order_line:
                 if l.product_id.product_tmpl_id.bom_ids:
-                    manufactured_qty = sum(m.product_qty for m in l.manufacturing_ids.filtered(lambda r: r.state != 'cancel'))
-                    if manufactured_qty < l.product_uom_qty:
-                        order.show_release = True
+                    if l.product_id.product_tmpl_id.bom_ids[0].type == 'phantom':
+                        for c in l.product_id.product_tmpl_id.bom_ids[0].bom_line_ids:
+                            ordered_qty = c.product_qty * l.product_uom_qty
+                            manufactured_qty = sum(m.product_qty for m in l.manufacturing_ids.filtered(lambda r: r.state != 'cancel' and r.product_id.id == c.product_id.id))
+                            if manufactured_qty < ordered_qty:
+                                order.show_release = True
+                    else:
+                        manufactured_qty = sum(m.product_qty for m in l.manufacturing_ids.filtered(lambda r: r.state != 'cancel'))
+                        if manufactured_qty < l.product_uom_qty:
+                            order.show_release = True
 
     @api.onchange('requested_date')
     def onchange_requested_date(self):
@@ -65,24 +72,49 @@ class SaleOrder(models.Model):
             created_mfg_orders = []
             for l in order.order_line:
                 if l.product_id.product_tmpl_id.bom_ids:
-                    to_produce_qty = l.product_uom_qty - sum(order.env['mrp.production'].search([('sale_line_id','=',l.id)]).filtered(lambda r: r.state != 'cancel').mapped('product_qty'))
-                    print to_produce_qty
-                    if to_produce_qty > 0:
-                        mfg_values= {
-                            'product_id': l.product_id.id,
-                            'product_uom_id': l.product_uom.id,
-                            'bom_id': l.product_id.product_tmpl_id.bom_ids[0].id,
-                            'product_qty': to_produce_qty,
-                            'procurement_group_id': order.procurement_group_id.id,
-                            'sale_line_id': l.id,
-                        }
-                        mfg_order = order.env['mrp.production'].create(mfg_values)
-                        mfg_order.button_plan()
-                        for wo in mfg_order.workorder_ids:
-                            if wo.operation_id.initial_ops == True:
-                                wo.state = 'ready'
-                        create_workorder = True
-                        created_mfg_orders.append(mfg_order.id)
+                    if l.product_id.product_tmpl_id.bom_ids[0].type == 'phantom':
+                        for c in l.product_id.product_tmpl_id.bom_ids[0].bom_line_ids:
+                            if c.product_id.product_tmpl_id.bom_ids:
+                                bom = c.product_id.product_tmpl_id.bom_ids[0].id
+                            else:
+                                raise UserError('A component of the kit is missing a Bill of Material')
+                            ordered_qty = c.product_qty * l.product_uom_qty
+                            to_produce_qty = ordered_qty - sum(order.env['mrp.production'].search([('sale_line_id','=',l.id),('product_id','=',c.product_id.id)]).filtered(lambda r: r.state != 'cancel').mapped('product_qty'))
+                            if to_produce_qty > 0:
+                                mfg_values= {
+                                    'product_id': c.product_id.id,
+                                    'product_uom_id': c.product_uom_id.id,
+                                    'product_qty': to_produce_qty,
+                                    'bom_id': bom,
+                                    'procurement_group_id': order.procurement_group_id.id,
+                                    'sale_line_id': l.id,
+                                    'product_kit_id': l.product_id.id,
+                                }
+                                mfg_order = order.env['mrp.production'].create(mfg_values)
+                                mfg_order.button_plan()
+                                for wo in mfg_order.workorder_ids:
+                                    if wo.operation_id.initial_ops == True:
+                                        wo.state = 'ready'
+                                create_workorder = True
+                                created_mfg_orders.append(mfg_order.id)
+                    else:
+                        to_produce_qty = l.product_uom_qty - sum(order.env['mrp.production'].search([('sale_line_id','=',l.id)]).filtered(lambda r: r.state != 'cancel').mapped('product_qty'))
+                        if to_produce_qty > 0:
+                            mfg_values= {
+                                'product_id': l.product_id.id,
+                                'product_uom_id': l.product_uom.id,
+                                'bom_id': l.product_id.product_tmpl_id.bom_ids[0].id,
+                                'product_qty': to_produce_qty,
+                                'procurement_group_id': order.procurement_group_id.id,
+                                'sale_line_id': l.id,
+                            }
+                            mfg_order = order.env['mrp.production'].create(mfg_values)
+                            mfg_order.button_plan()
+                            for wo in mfg_order.workorder_ids:
+                                if wo.operation_id.initial_ops == True:
+                                    wo.state = 'ready'
+                            create_workorder = True
+                            created_mfg_orders.append(mfg_order.id)
 
             if create_workorder == True:
                 sale_workorder_values = {

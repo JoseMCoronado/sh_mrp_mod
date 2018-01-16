@@ -9,6 +9,7 @@ class MrpProduction(models.Model):
     sale_line_id = fields.Many2one('sale.order.line', string='Sale Workorder')
     sale_order_line_desc = fields.Text('Sale Line Desc', related='sale_line_id.name',readonly=True)
     stage = fields.Text('stage',compute='_compute_stage',readonly=True,store=False)
+    product_kit_id = fields.Many2one('product.product', string='Kit Product')
 
     @api.multi
     def _compute_stage(self):

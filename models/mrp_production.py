@@ -8,8 +8,22 @@ class MrpProduction(models.Model):
     sale_workorder_id = fields.Many2one('sale.workorder', string='Sale Workorder')
     sale_line_id = fields.Many2one('sale.order.line', string='Sale Workorder')
     sale_order_line_desc = fields.Text('Sale Line Desc', related='sale_line_id.name',readonly=True)
+    workorder_desc = fields.Text('Description',compute='_compute_workorder_desc',readonly=True,store=False)
     stage = fields.Text('stage',compute='_compute_stage',readonly=True,store=False)
     product_kit_id = fields.Many2one('product.product', string='Kit Product')
+
+    @api.multi
+    def _compute_workorder_desc(self):
+        for mrp in self:
+            if not mrp.product_kit_id:
+                mrp.workorder_desc = mrp.sale_order_line_desc
+            else:
+                parsed_desc = mrp.product_id.name
+                second_package = "---" + '\n'
+                for values in mrp.sale_line_id.attribute_id.attribute_values:
+                    second_package += '    ' + str(values.categ_id.name) + ': ' + str(values.value) + '\n'
+                new_desc = parsed_desc + second_package
+                mrp.workorder_desc = new_desc
 
     @api.multi
     def _compute_stage(self):

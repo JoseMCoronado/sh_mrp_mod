@@ -206,7 +206,7 @@
               									<td t-if="display_image"><img t-if="l.product_id.image_medium" t-att-src="'data:image/png;base64,'+l.product_id.image_medium" style="max-height: 80px;"/></td>
               									<td style="white-space:nowrap;"><strong><span t-esc="str(l.product_id.code)"/></strong></td>
               									<td>
-              									<span t-field="l.sale_order_line_desc"/>
+              									<span t-field="l.workorder_desc"/>
               									</td>
               									<td class="text-right">
               										<span t-field="l.product_qty"/>

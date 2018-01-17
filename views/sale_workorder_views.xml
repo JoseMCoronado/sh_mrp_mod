@@ -38,7 +38,8 @@
                       <tree editable="bottom">
                         <field name="product_id"/>
                         <field name="product_kit_id"/>
-                        <field name="sale_order_line_desc"/>
+                        <field name="sale_order_line_desc" invisible="1"/>
+                        <field name="workorder_desc"/>
                         <field name="product_qty"/>
                         <button type="object" name="action_update_mo_qty" string="Update" class="oe_link" attrs="{'invisible': [('state','in',['done','cancel'])]}"/>
                         <field name="qty_produced"/>

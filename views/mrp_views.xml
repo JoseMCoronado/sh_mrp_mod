@@ -84,18 +84,19 @@
           </page>
         </xpath>
         <xpath expr="//field[@name='product_id']" position="replace">
+          <label for="product_kit_id" string="Kit"/>
+          <div class="o_row">
+            <field name="product_kit_id" string="Kit"/>
+          </div>
           <label for="product_id" string="To Produce"/>
           <div class="o_row">
               <field name="product_id"/>
               <field name="attribute_id" invisible="1"/>
           </div>
-          <label for="product_kit_id" string="Kit"/>
-          <div class="o_row">
-            <field name="product_kit_id" string="Kit"/>
-          </div>
-          <label for="sale_order_line_desc" string="Attributes"/>
+          <label for="sale_order_line_desc" string="Desc/Attributes"/>
           <div class="o_row">
             <field name="sale_order_line_desc" string="Attributes"/>
+            <field name="product_desc" attrs="{'invisible':[('sale_order_line_desc','!=',False)]}"/>
           </div>
         </xpath>
       </field>

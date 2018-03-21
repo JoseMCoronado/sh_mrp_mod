@@ -197,6 +197,7 @@
               						<tr>
               							<th t-if="display_image"> </th>
               							<th>SKU</th>
+                            <th>Barcode</th>
               							<th>Description</th>
               							<th class="text-right">Quantity</th>
               						</tr>
@@ -205,7 +206,10 @@
               								<tr t-foreach="o.manufacturing_ids" t-as="l">
               									<td t-if="display_image"><img t-if="l.product_id.image_medium" t-att-src="'data:image/png;base64,'+l.product_id.image_medium" style="max-height: 80px;"/></td>
               									<td style="white-space:nowrap;"><strong><span t-esc="str(l.product_id.code)"/></strong></td>
-              									<td>
+                                <td style="text-align: center; vertical-align: middle;" class="col-xs-5">
+                                    <img t-if="l.product_id.default_code" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', l.product_id.default_code, 600, 150)" style="width:100%;height:20%;"/>
+                                </td>
+                                <td>
               									<span t-field="l.workorder_desc"/>
               									</td>
               									<td class="text-right">

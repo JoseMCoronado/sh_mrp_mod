@@ -59,6 +59,8 @@ class SaleWorkorder(models.Model):
                     if m.state not in ['done','cancel']:
                         m.state = 'done'
                         m.button_mark_done()
+            for p in wo.order_id.picking_ids.filtered(lambda x:x.state not in ['cancel','draft','done']):
+                p.action_assign()
             return True
 
     @api.multi

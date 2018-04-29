@@ -108,6 +108,7 @@
         <field name="arch" type="xml">
           <tree create="0">
             <field name="partner_id"/>
+            <field name="client_order_ref"/>
             <field name="name"/>
             <field name="create_date" string="Work Order Date"/>
             <field name="commitment_date"/>

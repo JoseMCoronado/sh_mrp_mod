@@ -21,7 +21,7 @@ class SaleWorkorder(models.Model):
     partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address')
     user_id = fields.Many2one('res.users', string='Salesperson')
     hide_complete = fields.Boolean('Hide Complete',compute="_hide_complete",store=False,readonly=True)
-
+    client_order_ref = fields.Char(string="Customer PO",related="sale_id.client_order_ref")
 
     @api.model
     def create(self, vals):

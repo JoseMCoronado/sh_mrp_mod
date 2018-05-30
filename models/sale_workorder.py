@@ -61,6 +61,9 @@ class SaleWorkorder(models.Model):
                         m.button_mark_done()
             for p in wo.order_id.picking_ids.filtered(lambda x:x.state not in ['cancel','draft','done']):
                 p.action_assign()
+                for operation in p.pack_operation_ids:
+                    operation.qty_done = operation.product_qty
+                p.do_new_transfer()
             return True
 
     @api.multi

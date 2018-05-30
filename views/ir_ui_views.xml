@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="mrp_bom_form_view_mod">
+      <field name="name">x_gfp.mrp.bom.form.mod</field>
+      <field name="model">mrp.bom</field>
+      <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+      <field name="priority">99</field>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='bom_line_ids']//tree//button[@name='action_see_attachments'][1]" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='bom_line_ids']//tree//button[@name='action_see_attachments'][2]" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='bom_line_ids']//tree//button[@name='action_see_attachments'][1]" position="before">
+          <field name="has_bom" invisible="1"/>
+          <button name="action_see_bom" type="object" icon="fa-cogs" attrs="{'invisible': [('has_bom', '=', False)]}"/>
+        </xpath>
+        <xpath expr="//field[@name='bom_line_ids']//tree//field[@name='product_id']" position="before">
+          <button name="action_see_template" type="object" icon="fa-cubes"/>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

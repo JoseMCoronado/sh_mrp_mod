@@ -63,7 +63,7 @@ class SaleWorkorder(models.Model):
                 p.action_assign()
                 for operation in p.pack_operation_ids:
                     operation.qty_done = operation.product_qty
-                p.do_new_transfer()
+                p.do_transfer()
             return True
 
     @api.multi

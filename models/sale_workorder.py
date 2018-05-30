@@ -60,6 +60,7 @@ class SaleWorkorder(models.Model):
                         m.state = 'done'
                         m.button_mark_done()
             for p in wo.order_id.picking_ids.filtered(lambda x:x.state not in ['cancel','draft','done']):
+                p.write({'requested_date':wo.requested_date,'commitment_date':wo.commitment_date})
                 p.action_assign()
                 for operation in p.pack_operation_ids:
                     operation.qty_done = operation.product_qty

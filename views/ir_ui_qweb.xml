@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+  <record model="ir.ui.view" id="mrp_bom_structure_report">
+    <field name="name">x_gfp.mrp_bom_structure_report.mod</field>
+    <field name="inherit_id" ref="mrp.mrp_bom_structure_report"/>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+      <xpath expr="//thead/tr/th[2]" position="after">
+        <th>Unit Cost</th>
+        <th>Total Cost</th>
+      </xpath>
+      <xpath expr="//tbody/t/tr/td[2]" position="after">
+        <td><span t-field="o.product_tmpl_id.standard_price"/></td>
+        <td><span t-esc="o.product_tmpl_id.standard_price * o.product_qty"/></td>
+      </xpath>
+      <xpath expr="//tbody/t/tr[2]/td[2]" position="after">
+        <td>
+          <span t-esc="l['punitcost']"/>
+        </td>
+        <td>
+          <span t-esc="l['pqty'] * l['punitcost']"/>
+        </td>
+      </xpath>
+    </field>
+  </record>
   <record model="ir.ui.view" id="report_packingslip_document">
         <field name="name">report_packingslip_document</field>
         <field name="type">qweb</field>

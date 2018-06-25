@@ -20,8 +20,13 @@ class SaleWorkorder(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer')
     partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address')
     user_id = fields.Many2one('res.users', string='Salesperson')
-    hide_complete = fields.Boolean('Hide Complete',compute="_hide_complete",store=False,readonly=True)
+    completed_wo = fields.Boolean('Hide Complete',compute="_completed_wo",store=False,readonly=True)
     client_order_ref = fields.Char(string="Customer PO",related="order_id.client_order_ref")
+    completed_by = fields.Many2one('res.users', string='Completed By')
+    state = fields.Selection([
+        ('open', 'Open'),
+        ('done', 'Completed'),
+        ], string='Status', default="open",copy=False)
 
     @api.model
     def create(self, vals):
@@ -65,12 +70,14 @@ class SaleWorkorder(models.Model):
                 #for operation in p.pack_operation_ids:
                 #    operation.qty_done = operation.product_qty
                 #p.do_transfer()
+            wo.completed_by = wo.env.user
+            wo.state = 'done'
             return True
 
     @api.multi
-    def _hide_complete(self):
+    def _completed_wo(self):
         for wo in self:
             if any(m.state not in ['done','cancel'] for m in wo.manufacturing_ids):
-                wo.hide_complete = False
+                wo.completed_wo = False
             else:
-                wo.hide_complete = True
+                wo.completed_wo = True

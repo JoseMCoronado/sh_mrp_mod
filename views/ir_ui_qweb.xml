@@ -270,4 +270,42 @@
             <field name="model">sale.workorder</field>
             <field name="report_name">sh_mrp_mod.report_workorder</field>
           </record>
+          <record model="ir.ui.view" id="report_rework_workorder_document">
+                <field name="name">report_rework_workorder_document</field>
+                <field name="type">qweb</field>
+                <field name="model" eval="False"/>
+                <field name="inherit_id" eval="False"/>
+                <field name="priority">16</field>
+                <field name="arch" type="xml">
+                  <t t-name="sh_mrp_mod.report_rework_workorder_document">
+                      <div class="page" height="100%" style="vertical-align:middle" align="center">
+                        <h1><span t-field="o.workorder_id.sale_workorder_id.name"/></h1>
+                        <h2><span t-field="o.workorder_id.sale_workorder_id.commitment_date" t-field-options="{&quot;format&quot;: &quot;MM/dd/yyyy&quot;}"/></h2>
+                        <h2><span t-field="o.workorder_id.sale_workorder_id.partner_id.name"/></h2>
+                      </div>
+                  </t>
+                </field>
+              </record>
+            <record model="ir.ui.view" id="report_rework_workorder">
+                <field name="name">report_rework_workorder</field>
+                <field name="type">qweb</field>
+                <field name="model" eval="False"/>
+                <field name="inherit_id" eval="False"/>
+                <field name="priority">16</field>
+                <field name="arch" type="xml">
+                  <t t-name="sh_mrp_mod.report_rework_workorder">
+                      <t t-call="report.html_container">
+                          <t t-foreach="docs" t-as="o">
+                              <t t-call="sh_mrp_mod.report_rework_workorder_document"/>
+                          </t>
+                      </t>
+                  </t>
+                </field>
+              </record>
+              <record model="ir.actions.report.xml" id="report_report_rework_workorder_document">
+                <field name="name">Rework Label</field>
+                <field name="report_type">qweb-pdf</field>
+                <field name="model">work.order.hold.reason.wizard</field>
+                <field name="report_name">sh_mrp_mod.report_rework_workorder</field>
+              </record>
 </odoo>

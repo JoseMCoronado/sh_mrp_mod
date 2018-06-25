@@ -14,6 +14,7 @@ RESPONSIBILITY FOR ANY BEHAVIOR ONCE INSTALLED.
 
     'depends':['base','purchase','stock','sale','mrp','sale_order_dates', 'sh_line_attribute'],
     'data':[
+            'views/data.xml',
             'views/ir_sequence.xml',
             'views/mrp_entry_wizard_views.xml',
             'views/sale_order_views.xml',

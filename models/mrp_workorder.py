@@ -27,6 +27,7 @@ class MrpWorkorder(models.Model):
     on_rework = fields.Boolean(string='Rework')
     product_kit_id = fields.Many2one('product.product', string='Kit Product', related="production_id.product_kit_id")
     product_desc = fields.Char('Description',related="product_id.name")
+    image = fields.Binary(string="Image",related="product_id.image")
 
     @api.multi
     def button_not_hold(self):
@@ -44,11 +45,6 @@ class MrpWorkorder(models.Model):
             self.production_id.button_mark_done()
         if all(r.state in ['cancel'] for r in self.production_id.workorder_ids):
             self.production_id.state = 'cancel'
-
-    @api.multi
-    def record_production(self):
-        super(MrpWorkorder, self).record_production()
-        self.done_user = self.env.user
 
     @api.depends('sale_workorder_id')
     def _compute_attribute(self):

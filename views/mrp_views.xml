@@ -58,9 +58,16 @@
         <xpath expr="//button[@name='button_start']" position="replace"/>
         <xpath expr="//button[@name='button_pending']" position="replace"/>
         <xpath expr="//button[@name='record_production']" position="attributes">
-          <attribute name="attrs">{'invisible': ['|',('is_produced', '=', True),('working_state', '=', 'blocked')]}</attribute>
+          <attribute name="invisible">1</attribute>
         </xpath>
-
+        <xpath expr="//button[@name='record_production']" position="before">
+          <button name="%(action_mrp_complete_wizard)d" class="btn-success" type="action" string="DONE" attrs="{'invisible': ['|',('is_produced', '=', True),('working_state', '=', 'blocked')]}"/>
+        </xpath>
+        <xpath expr="//field[@name='product_id']/.." position="after">
+          <group class="pull-right">
+            <field name="image" widget="image" nolabel="1" readonly="1"/>
+          </group>
+        </xpath>
         <xpath expr="//field[@name='product_id']" position="before">
           <field name="sale_workorder_id"/>
           <field name="done_user" readonly="1" attrs="{'invisible':[('done_user','=',False)]}"/>

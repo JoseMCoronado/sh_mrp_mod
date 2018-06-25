@@ -9,7 +9,7 @@ class MrpProduction(models.Model):
     sale_line_id = fields.Many2one('sale.order.line', string='Sale Workorder')
     sale_order_line_desc = fields.Text('Sale Line Desc', related='sale_line_id.name',readonly=True)
     workorder_desc = fields.Text('Description',compute='_compute_workorder_desc',readonly=True,store=False)
-    stage = fields.Text('stage',compute='_compute_stage',readonly=True,store=False)
+    stage = fields.Text('Stage',compute='_compute_stage',readonly=True,store=False)
     product_kit_id = fields.Many2one('product.product', string='Kit Product')
 
     @api.multi
@@ -57,6 +57,14 @@ class MrpProduction(models.Model):
     @api.multi
     def action_view_workorders(self):
         action_data = self.env.ref('mrp.action_mrp_workorder_production_specific').read()[0]
+        context_value = self.env.context.get('workcenter', [])
+        all_workorder_ids = self.workorder_ids.filtered(lambda x: x.workcenter_id.id == context_value)
+        if len(all_workorder_ids) > 1:
+            action_data.update({'domain':[('workcenter_id','=',self.env.context.get('workcenter', []))]})
+        elif len(all_workorder_ids) == 1:
+            res = self.env.ref('mrp.mrp_production_workcenter_form_view_inherit', False)
+            action_data['views'] = [(res and res.id or False, 'form')]
+            action_data['res_id'] = all_workorder_ids and all_workorder_ids[0].id or False
         return action_data
 
     @api.multi

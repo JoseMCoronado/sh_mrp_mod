@@ -22,5 +22,52 @@
         </xpath>
       </field>
     </record>
+    <record model="ir.ui.view" id="mrp_workcenter_kanban_mod">
+      <field name="name">x_gfp.mrp.workcenter.kanban.mod</field>
+      <field name="model">mrp.workcenter</field>
+      <field name="inherit_id" ref="mrp.mrp_workcenter_kanban"/>
+      <field name="priority">99</field>
+      <field name="arch" type="xml">
+        <xpath expr="//div[@name='o_wo']" position="replace">
+          <div class="btn-group" name="o_wo">
+            <t t-if="record.workorder_count.raw_value &gt; 0">
+                <button class="btn btn-primary" name="open_sale_work_orders" type="object">
+                    <span>Work Orders</span>
+                </button>
+            </t>
+          </div>
+        </xpath>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="mrp_workcenter_view_mod">
+      <field name="name">x_gfp.mrp.workcenter.form.mod</field>
+      <field name="model">mrp.workcenter</field>
+      <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+      <field name="priority">99</field>
+      <field name="arch" type="xml">
+        <xpath expr="//notebook" position="inside">
+          <page string="Users">
+            <field name="user_ids" widget="many2many_kanban" options="{'not_delete': True}">
+                <kanban quick_create="false" create="true" delete="true">
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click" style="position: relative">
+                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                <div class="oe_module_vignette">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                    <div class="oe_module_desc">
+                                        <field name="name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+          </page>
+        </xpath>
+      </field>
+    </record>
   </data>
 </odoo>

@@ -10,7 +10,7 @@
               <button name="complete_workorder" type="object" groups="sh_mrp_mod.group_sale_workorder_complete" string="Complete Workorder" class="btn-success" attrs="{'invisible':[('state','=','done')]}"/>
               <button name="print_sale_workorder" type="object" string="Print Workorder" class="oe_highlight" style="background-color:#ff7f00"/>
               <button name="delete_workorder" type="object" string="Delete Workorder" class="btn-danger"/>
-              <field name="state" widget="statusbar" clickable="False"/>
+              <field name="state" widget="statusbar"/>
               <field name="completed_wo" invisible="1"/>
             </header>
             <div align="center" style="background-color:#CB4335;color:white;" attrs="{'invisible':['|',('completed_wo','=',True),('state','=','done')]}">

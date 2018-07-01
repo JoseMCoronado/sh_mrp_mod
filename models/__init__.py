@@ -10,3 +10,5 @@ import mrp_entry_wizard
 import sale_workorder
 import stock_picking
 import mrp_bom
+import res_company
+import sale_config_settings

@@ -39,6 +39,21 @@
         </xpath>
       </field>
     </record>
+    <record model="ir.ui.view" id="view_sale_config_settings">
+      <field name="name">x_gfp.sale.config.settings.mod</field>
+      <field name="model">sale.config.settings</field>
+      <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
+      <field name="priority">101</field>
+      <field name="arch" type="xml">
+        <data>
+          <div id="main" position="inside">
+              <group string="Compute Price Markup" name="Compute_Price_Markup">
+                  <field name="percent_markup"/>
+              </group>
+          </div>
+        </data>
+      </field>
+    </record>
     <record model="ir.ui.view" id="mrp_workcenter_view_mod">
       <field name="name">x_gfp.mrp.workcenter.form.mod</field>
       <field name="model">mrp.workcenter</field>

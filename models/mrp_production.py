@@ -68,6 +68,11 @@ class MrpProduction(models.Model):
         return action_data
 
     @api.multi
+    def action_view_routing(self):
+        action_data = self.env.ref('mrp.action_mrp_workorder_production_specific').read()[0]
+        return action_data
+
+    @api.multi
     def remove_from_workorder(self):
         for mrp in self:
             for wo in mrp.workorder_ids:

@@ -53,7 +53,8 @@
                         <field name="state" invisible="1"/>
                         <field name="stage"/>
                         <button name="action_view_workorders" type="object" invisible="not context.get('workcenter')" string="INSTRUCTIONS"/>
-                        <button name="remove_from_workorder" type="object" string="REMOVE"/>
+                        <button name="action_view_routing" type="object" icon="fa-clock-o"/>
+                        <button name="remove_from_workorder" type="object" string="REMOVE" groups="sh_mrp_mod.group_sale_workorder_complete"/>
                       </tree>
                       <form string="Edit">
                         <group>

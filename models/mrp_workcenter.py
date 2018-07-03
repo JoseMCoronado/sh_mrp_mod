@@ -18,11 +18,26 @@ class MrpWorkcenter(models.Model):
     _inherit = "mrp.workcenter"
 
     user_ids = fields.Many2many('res.users',string="Users")
+    ready_workorder_count = fields.Integer(string="Ready Workorders",store=False,readonly=True,compute="_compute_ready_workorders")
+
+    @api.multi
+    def _compute_ready_workorders(self):
+        for record in self:
+            mos = record.order_ids.filtered(lambda x: x.state in ['ready','rework','hold']).mapped('production_id').ids
+            record.ready_workorder_count = len(mos)
 
     @api.multi
     def open_sale_work_orders(self):
         for record in self:
             action_data = record.env.ref('sh_mrp_mod.action_sale_workorder_tree').read()[0]
             mos = record.order_ids.filtered(lambda x: x.state not in ['done','cancel']).mapped('production_id').ids
+            action_data.update({'domain':[('manufacturing_ids','in',mos)],'context':{'workcenter':record.id}})
+            return action_data
+
+    @api.multi
+    def open_ready_sale_work_orders(self):
+        for record in self:
+            action_data = record.env.ref('sh_mrp_mod.action_sale_workorder_tree').read()[0]
+            mos = record.order_ids.filtered(lambda x: x.state in ['ready','rework','hold']).mapped('production_id').ids
             action_data.update({'domain':[('manufacturing_ids','in',mos)],'context':{'workcenter':record.id}})
             return action_data

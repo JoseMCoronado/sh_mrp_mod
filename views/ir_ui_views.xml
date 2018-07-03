@@ -30,11 +30,19 @@
       <field name="arch" type="xml">
         <xpath expr="//div[@name='o_wo']" position="replace">
           <div class="btn-group" name="o_wo">
-            <t t-if="record.workorder_count.raw_value &gt; 0">
-                <button class="btn btn-primary" name="open_sale_work_orders" type="object">
-                    <span>Work Orders</span>
+            <field name="ready_workorder_count" invisible="1"/>
+            <t t-if="record.ready_workorder_count.raw_value &gt; 0">
+                <button class="btn btn-primary" name="open_ready_sale_work_orders" type="object">
+                    <span>Work Orders To Do</span>
                 </button>
             </t>
+          </div>
+          <div class="row" t-if="record.workorder_count.raw_value &gt; 0">
+              <div class="col-xs-8">
+                  <a name="open_sale_work_orders" type="object">
+                      Upcoming Work Orders
+                  </a>
+              </div>
           </div>
         </xpath>
       </field>

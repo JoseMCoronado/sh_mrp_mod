@@ -30,16 +30,7 @@ class ProductProduct(models.Model):
         result, result2 = bom.explode(self, 1)
         for sbom, sbom_data in result2:
             if not sbom.attribute_value_ids:
-                price += sbom.product_id.uom_id._compute_price(sbom.product_id.standard_price, sbom.product_uom_id) * sbom_data['qty']
-        if bom.routing_id:
-            # FIXME master: remove me
-            if hasattr(self.env['mrp.workcenter'], 'costs_hour'):
-                total_cost = 0.0
-                for order in bom.routing_id.operation_ids:
-                    total_cost += (order.time_cycle/60) * order.workcenter_id.costs_hour
-                price += bom.product_uom_id._compute_price(total_cost, bom.product_id.uom_id)
-        # Convert on product UoM quantities
+                price += sbom.product_id.uom_id._compute_price(sbom.product_id.list_price, sbom.product_uom_id) * sbom_data['qty']
         if price > 0:
             price = bom.product_uom_id._compute_price(price / bom.product_qty, self.uom_id)
-        price = price * (1+(self.env.user.company_id.percent_markup/100))
         return price

@@ -12,7 +12,7 @@ THIS MODULE IS PROVIDED AS IS - INSTALLATION AT USERS' OWN RISK - AUTHOR OF MODU
 RESPONSIBILITY FOR ANY BEHAVIOR ONCE INSTALLED.
         """,
 
-    'depends':['base','purchase','stock','sale','mrp','sale_order_dates', 'sh_line_attribute'],
+    'depends':['base','purchase','stock','sale','mrp','sale_order_dates', 'sh_line_attribute','sh_sale_mod'],
     'data':[
             'views/data.xml',
             'views/ir_sequence.xml',

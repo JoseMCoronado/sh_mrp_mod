@@ -28,6 +28,10 @@ class SaleWorkorder(models.Model):
         ('done', 'Completed'),
         ], string='Status', default="open",copy=False)
     carrier_id = fields.Many2one('delivery.carrier',string="Delivery Method")
+    order_type = fields.Selection([
+        ('order', 'Sales Order'),
+        ('rma', 'RMA'),
+        ], string='Order Type (Technical)', related="order_id.order_type")
 
     @api.model
     def create(self, vals):

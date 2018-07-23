@@ -87,12 +87,13 @@
         <field name="mode">primary</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-          <tree create="0" decoration-bf="True" colors="#FF0000:commitment_date &lt; current_date and state != 'done'">
+          <tree create="0" decoration-bf="True" colors="#FF0000:commitment_date &lt; current_date and state != 'done'; #FF8000:order_type == 'rma' and commitment_date &gt;= current_date">
             <field name="name"/>
             <field name="create_date" string="Work Order Date"/>
             <field name="requested_date"/>
             <field name="commitment_date"/>
             <field name="state"/>
+            <field name="order_type" invisible="1"/>
           </tree>
         </field>
     </record>
@@ -115,7 +116,7 @@
         <field name="mode">primary</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-          <tree create="0" decoration-bf="True" colors="#FF0000:commitment_date &lt;= current_date and state != 'done'">
+          <tree create="0" decoration-bf="True" colors="#FF0000:commitment_date &lt; current_date and state != 'done'; #FF8000:order_type == 'rma' and commitment_date &gt;= current_date">
             <field name="partner_id"/>
             <field name="client_order_ref"/>
             <field name="name"/>
@@ -124,6 +125,7 @@
             <field name="requested_date"/>
             <field name="order_id"/>
             <field name="state"/>
+            <field name="order_type" invisible="1"/>
           </tree>
         </field>
     </record>

@@ -10,6 +10,7 @@ class Picking(models.Model):
     readonly=False, store=True,copy=False)
     commitment_date = fields.Datetime(string='Commitment Date',
     readonly=False, store=True,copy=False)
+    sale_workorder_id = fields.Many2one('sale.workorder',string="Sale Workorder")
 
     @api.multi
     def print_packing_slip(self):

@@ -160,6 +160,9 @@
         <xpath expr="//header" position="inside">
           <button name="print_packing_slip" type="object" string="Print Packing Slip"/>
         </xpath>
+        <xpath expr="//field[@name='origin']" position="after">
+          <field name="sale_workorder_id" attrs="{'invisible':[('picking_type_code','!=','outgoing')]}"/>
+        </xpath>
       </field>
     </record>
     <record model="ir.ui.view" id="mrp_routing_workcenter_form_view_mod">

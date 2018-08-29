@@ -126,7 +126,10 @@ class SaleOrder(models.Model):
                     'partner_shipping_id': order.partner_shipping_id.id,
                     'user_id': order.user_id.id,
                     'carrier_id': order.carrier_id.id,
+
                 }
+                if order.partner_id and order.partner_id.shipping_account_ids:
+                    sale_workorder_values.update({'shipping_account_id':order.partner_id.shipping_account_ids[0].id})
                 sale_workorder = order.env['sale.workorder'].create(sale_workorder_values)
                 action = order.env.ref('sh_mrp_mod.action_sale_workorder_tree')
                 result = action.read()[0]

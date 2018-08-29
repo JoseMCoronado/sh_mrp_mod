@@ -10,4 +10,3 @@ import mrp_entry_wizard
 import sale_workorder
 import stock_picking
 import mrp_bom
-import shipping_account

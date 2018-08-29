@@ -28,10 +28,12 @@ class SaleWorkorder(models.Model):
         ('done', 'Completed'),
         ], string='Status', default="open",copy=False)
     carrier_id = fields.Many2one('delivery.carrier',string="Delivery Method")
+    shipping_account_id = fields.Many2one('customer.shipping.account',string="Customer Account")
     order_type = fields.Selection([
         ('order', 'Sales Order'),
         ('rma', 'RMA'),
         ], string='Order Type (Technical)', related="order_id.order_type")
+
 
     @api.model
     def create(self, vals):
@@ -70,7 +72,7 @@ class SaleWorkorder(models.Model):
                         m.state = 'done'
                         m.button_mark_done()
             for p in wo.order_id.picking_ids.filtered(lambda x:x.state not in ['cancel','draft','done']):
-                p.write({'requested_date':wo.requested_date,'commitment_date':wo.commitment_date,'carrier_id':wo.carrier_id.id,'sale_workorder_id':wo.id})
+                p.write({'requested_date':wo.requested_date,'commitment_date':wo.commitment_date,'carrier_id':wo.carrier_id.id,'customer_ship_account':wo.shipping_account_id.id,'sale_workorder_id':wo.id})
                 p.action_assign()
                 for operation in p.pack_operation_ids:
                     operation.qty_done = operation.product_qty

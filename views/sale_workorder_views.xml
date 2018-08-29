@@ -35,7 +35,8 @@
                   <field name="create_date" string="Work Order Date" widget="date"/>
                   <field name="requested_date" required="1" widget="date"/>
                   <field name="commitment_date" required="1" widget="date"/>
-                  <field name="carrier_id"/>
+                  <field name="shipping_account_id" options="{'no_open':True,'no_create':True}"/>
+                  <field name="carrier_id" options="{'no_open':True,'no_create':True}"/>
                 </group>
               </group>
               <notebook>

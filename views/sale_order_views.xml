@@ -22,6 +22,12 @@
         <xpath expr="//field[@name='commitment_date']" position="after">
           <field name="commitment_date_real"/>
         </xpath>
+        <xpath expr="//div[@name='carrier_selection']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//label[@for='carrier_id']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
       </field>
     </record>
   </data>

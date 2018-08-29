@@ -3,7 +3,7 @@
 from odoo import api, fields, models
 
 class ShippingAccount(models.Model):
-    _name = 'x_customer.shipping.account'
+    _inherit = 'x_customer.shipping.account'
     _description = "Customer Shipping Accounts"
     _order = "sequence asc"
 

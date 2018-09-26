@@ -28,11 +28,41 @@ class SaleWorkorder(models.Model):
         ('done', 'Completed'),
         ], string='Status', default="open",copy=False)
     carrier_id = fields.Many2one('delivery.carrier',string="Delivery Method")
+    carrier_code = fields.Many2one('delivery.carrier.code',string="Delivery Carrier Code",related="carrier_id.carrier_code")
     shipping_account_id = fields.Many2one('customer.shipping.account',string="Customer Account")
     order_type = fields.Selection([
         ('order', 'Sales Order'),
         ('rma', 'RMA'),
         ], string='Order Type (Technical)', related="order_id.order_type")
+
+    @api.constrains('partner_id')
+    def set_carrier(self):
+        for record in self:
+            if record.partner_id and record.partner_id.commercial_partner_id and record.partner_id.commercial_partner_id.property_delivery_carrier_id:
+                carrier = record.partner_id.commercial_partner_id.property_delivery_carrier_id
+                record.carrier_id = carrier
+                account = record.check_accounts()
+                if account:
+                    record.shipping_account_id = account
+
+    @api.onchange('carrier_id')
+    def carrier_onchange(self):
+        for record in self:
+            if record.carrier_id:
+                account = record.check_accounts()
+                if account:
+                    record.shipping_account_id = account
+                else:
+                    record.shipping_account_id = False
+
+    def check_accounts(self):
+        for record in self:
+            if record.partner_id.commercial_partner_id.shipping_account_ids and record.carrier_id:
+                valid_accounts = record.partner_id.commercial_partner_id.shipping_account_ids.filtered(lambda x: x.carrier_id.carrier_code.id == record.carrier_id.carrier_code.id)
+                if valid_accounts:
+                    return valid_accounts[0]
+                else:
+                    return False
 
 
     @api.model

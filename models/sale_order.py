@@ -74,29 +74,30 @@ class SaleOrder(models.Model):
                 if l.product_id.product_tmpl_id.bom_ids:
                     if l.product_id.product_tmpl_id.bom_ids[0].type == 'phantom':
                         for c in l.product_id.product_tmpl_id.bom_ids[0].bom_line_ids:
-                            if c.product_id.product_tmpl_id.bom_ids:
-                                bom = c.product_id.product_tmpl_id.bom_ids[0].id
-                            else:
-                                raise UserError('A component of the kit is missing a Bill of Material')
-                            ordered_qty = c.product_qty * l.product_uom_qty
-                            to_produce_qty = ordered_qty - sum(order.env['mrp.production'].search([('sale_line_id','=',l.id),('product_id','=',c.product_id.id)]).filtered(lambda r: r.state != 'cancel').mapped('product_qty'))
-                            if to_produce_qty > 0:
-                                mfg_values= {
-                                    'product_id': c.product_id.id,
-                                    'product_uom_id': c.product_uom_id.id,
-                                    'product_qty': to_produce_qty,
-                                    'bom_id': bom,
-                                    'procurement_group_id': order.procurement_group_id.id,
-                                    'sale_line_id': l.id,
-                                    'product_kit_id': l.product_id.id,
-                                }
-                                mfg_order = order.env['mrp.production'].create(mfg_values)
-                                mfg_order.button_plan()
-                                for wo in mfg_order.workorder_ids:
-                                    if wo.operation_id.initial_ops == True:
-                                        wo.state = 'ready'
-                                create_workorder = True
-                                created_mfg_orders.append(mfg_order.id)
+                            if c.product_id.type in ['consu','product']:
+                                if c.product_id.product_tmpl_id.bom_ids:
+                                    bom = c.product_id.product_tmpl_id.bom_ids[0].id
+                                else:
+                                    raise UserError('A component of the kit is missing a Bill of Material')
+                                ordered_qty = c.product_qty * l.product_uom_qty
+                                to_produce_qty = ordered_qty - sum(order.env['mrp.production'].search([('sale_line_id','=',l.id),('product_id','=',c.product_id.id)]).filtered(lambda r: r.state != 'cancel').mapped('product_qty'))
+                                if to_produce_qty > 0:
+                                    mfg_values= {
+                                        'product_id': c.product_id.id,
+                                        'product_uom_id': c.product_uom_id.id,
+                                        'product_qty': to_produce_qty,
+                                        'bom_id': bom,
+                                        'procurement_group_id': order.procurement_group_id.id,
+                                        'sale_line_id': l.id,
+                                        'product_kit_id': l.product_id.id,
+                                    }
+                                    mfg_order = order.env['mrp.production'].create(mfg_values)
+                                    mfg_order.button_plan()
+                                    for wo in mfg_order.workorder_ids:
+                                        if wo.operation_id.initial_ops == True:
+                                            wo.state = 'ready'
+                                    create_workorder = True
+                                    created_mfg_orders.append(mfg_order.id)
                     else:
                         to_produce_qty = l.product_uom_qty - sum(order.env['mrp.production'].search([('sale_line_id','=',l.id)]).filtered(lambda r: r.state != 'cancel').mapped('product_qty'))
                         if to_produce_qty > 0:

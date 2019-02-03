@@ -69,7 +69,7 @@
           </group>
         </xpath>
         <xpath expr="//field[@name='product_id']" position="before">
-          <field name="sale_workorder_id"/>
+          <field name="sale_workorder_id" invisibl1="1"/>
           <field name="done_user" readonly="1" attrs="{'invisible':[('done_user','=',False)]}"/>
         </xpath>
         <!--Removed due to client's requestion, however, leaving for future addittion in case if they want it.
@@ -115,7 +115,7 @@
       <field name="priority">99</field>
       <field name="arch" type="xml">
         <xpath expr="//field[@name='name']" position="before">
-          <field name="sale_workorder_id"/>
+          <field name="sale_workorder_id" invisible="1"/>
         </xpath>
         <xpath expr="//field[@name='qty_production']" position="attributes">
           <attribute name='string'>Qty</attribute>

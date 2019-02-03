@@ -63,12 +63,3 @@ class MrpWorkorder(models.Model):
                 action_data = line.env.ref('sh_line_attribute.action_window_line_attribute').read()[0]
                 action_data.update({'res_id':line.attribute_id.id})
                 return action_data
-
-    @api.multi
-    def action_view_workorder(self):
-        action = self.env.ref('sh_mrp_mod.action_sale_workorder_tree')
-        result = action.read()[0]
-        res = self.env.ref('sh_mrp_mod.view_sale_workorder_form', False)
-        result['views'] = [(res and res.id or False, 'form')]
-        result['res_id'] = self.sale_workorder_id.id
-        return result

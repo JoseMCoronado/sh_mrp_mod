@@ -132,7 +132,7 @@
           <button name="print_packing_slip" type="object" string="Print Packing Slip"/>
         </xpath>
         <xpath expr="//field[@name='origin']" position="after">
-          <field name="sale_workorder_id" attrs="{'invisible':[('picking_type_code','!=','outgoing')]}"/>
+          <field name="sale_workorder_id" invisible="1"/>
         </xpath>
       </field>
     </record>

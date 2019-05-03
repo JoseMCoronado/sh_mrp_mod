@@ -10,6 +10,7 @@
         <xpath expr="//notebook" position="inside">
           <page string="Manufacturing">
             <group string="Special Instructions">
+              <field name="special_instructions_url" widget="url"/>
               <field name="special_instructions" nolabel="1" widget="pdf_viewer"/>
             </group>
           </page>

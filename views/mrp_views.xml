@@ -128,9 +128,6 @@
       <field name="priority">99</field>
       <field name="arch" type="xml">
         <xpath expr="//button[@name='force_assign']" position="replace"/>
-        <xpath expr="//header" position="inside">
-          <button name="print_packing_slip" type="object" string="Print Packing Slip"/>
-        </xpath>
         <xpath expr="//field[@name='origin']" position="after">
           <field name="sale_workorder_id" invisible="1"/>
         </xpath>
